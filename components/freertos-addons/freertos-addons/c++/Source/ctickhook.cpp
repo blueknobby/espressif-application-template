@@ -52,40 +52,37 @@ list<TickHook *> TickHook::Callbacks;
 
 
 TickHook::TickHook()
-    : Enabled(true)
+    : Enabled(true),
+      mutex(MutexStandard())
 {
 }
 
 
 TickHook::~TickHook()
 {
-    taskENTER_CRITICAL();
+    LockGuard lock(mutex);
     Callbacks.remove(this);
-    taskEXIT_CRITICAL();
 }
 
 
 void TickHook::Register()
 {
-    taskENTER_CRITICAL();
+    LockGuard lock(mutex);
     Callbacks.push_front(this);
-    taskEXIT_CRITICAL();
 }
 
 
 void TickHook::Disable()
 {
-    taskENTER_CRITICAL();
+    LockGuard lock(mutex);
     Enabled = false;
-    taskEXIT_CRITICAL();
 }
 
 
 void TickHook::Enable()
 {
-    taskENTER_CRITICAL();
+    LockGuard lock(mutex);
     Enabled = true;
-    taskEXIT_CRITICAL();
 }
 
 
@@ -107,5 +104,3 @@ void vApplicationTickHook(void)
 }
 
 #endif
-
-

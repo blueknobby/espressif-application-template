@@ -38,7 +38,13 @@
  *
  ***************************************************************************/
 
-
+/**
+ * @note This class has been edited to use the xCreateTaskPinnedToCore wrapper
+ * from the ESP-IDF to make this library compatible with the ESP32 mcu. All relevant
+ * constructors now have the additional field for a coreID to be passed in.
+ *
+ * updated by: Ethan Gibson
+ */
 
 #ifndef THREAD_HPP_
 #define THREAD_HPP_
@@ -93,15 +99,18 @@ class Thread {
          *  @param Name Name of the thread. Only useful for debugging.
          *  @param StackDepth Number of "words" allocated for the Thread stack.
          *  @param Priority FreeRTOS priority of this Thread.
+         *  @param ESP-IDF Core ID (0 for Pro, 1 for App)
          */
 #ifndef CPP_FREERTOS_NO_CPP_STRINGS
         Thread( const std::string Name,
                 uint16_t StackDepth,
-                UBaseType_t Priority);
+                UBaseType_t Priority,
+                const uint8_t coreID);
 #else
         Thread( const char *Name,
                 uint16_t StackDepth,
-                UBaseType_t Priority);
+                UBaseType_t Priority,
+                const uint8_t coreID);
 #endif
 
         /**
@@ -109,9 +118,11 @@ class Thread {
          *
          *  @param StackDepth Number of "words" allocated for the Thread stack.
          *  @param Priority FreeRTOS priority of this Thread.
+         *  @param ESP-IDF Core ID (0 for Pro, 1 for App)
          */
         Thread( uint16_t StackDepth,
-                UBaseType_t Priority);
+                UBaseType_t Priority,
+                const uint8_t coreID);
 
         /**
          *  Starts a thread.
@@ -165,7 +176,6 @@ class Thread {
         static inline void StartScheduler()
         {
             SchedulerActive = true;
-            vTaskStartScheduler();
         }
 
         /**
@@ -404,6 +414,11 @@ class Thread {
          *  Flag whether or not the Thread was started.
          */
         bool ThreadStarted;
+
+        /**
+         *  Esp-Idf core ID
+         */
+        const uint8_t CoreID;
 
         /**
          *  Make sure no one calls Start more than once.
