@@ -57,7 +57,7 @@ print_chip_info()
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
 
-    ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), WiFi%s%s%s, ",
+    ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), WiFi%s%s%s",
              CONFIG_IDF_TARGET,
              chip_info.cores,
              (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
