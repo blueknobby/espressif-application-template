@@ -1,0 +1,21 @@
+build
+cmake-build-debug
+
+sdkconfig
+sdkconfig.old
+save
+
+
+managed_components
+test/managed_components
+
+MANIFEST
+
+*.orig
+*.rej
+*.zip
+
+# emacs stuff
+
+\#.*\#
+*~
