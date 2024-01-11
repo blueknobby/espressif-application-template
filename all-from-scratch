@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ -z "$IDF_PATH" ]
+then
+    echo "Must set IDF_PATH" 1>&2
+    exit 1
+fi
+
+if [ -d /project ]
+then
+    # fix for github build action
+    git config --global --add safe.directory /project
+fi
+
+if [ $# -eq 0 ]
+then
+    ARCH=(esp32s3)
+else
+    ARCH=( "$@" )
+fi
+
+
+for arch in ${ARCH[@]}
+do
+  set -ex
+  echo "Building for ${arch}...."
+  rm -rf build sdkconfig
+  idf.py set-target $arch
+  idf.py fullclean
+  idf.py build | xtensa-${arch}-elf-c++filt
+done
