@@ -22,7 +22,6 @@ shutdown_handler()
 }
 
 
-
 static void
 init_nvs()
 {
@@ -48,6 +47,7 @@ print_chip_info()
     /* Print chip information */
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
+
     ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), WiFi%s%s%s, ",
              CONFIG_IDF_TARGET,
              chip_info.cores,
@@ -117,11 +117,11 @@ setup()
 void
 loop()
 {
-    const int ms_between_ticks = 50;
-    constexpr int ticks_per_second = 1000 / ms_between_ticks;
+    const int         ms_between_ticks = 50;
+    constexpr int     ticks_per_second = 1000 / ms_between_ticks;
 
-    static uint64_t tick_counter = 1;
-    static uint64_t one_second_tick_counter = 1;
+    static uint64_t   tick_counter = 1;
+    static uint64_t   one_second_tick_counter = 1;
     static TickType_t lastWakeTime = xTaskGetTickCount();
 
     vTaskDelayUntil(&lastWakeTime, pdMS_TO_TICKS(ms_between_ticks));
@@ -130,8 +130,6 @@ loop()
     if ((tick_counter % ticks_per_second) == 0) {
         one_second_tick_counter += 1;
     }
-
-
 
 #if CONFIG_BKT_RUN_HEAP_INTEGRITY_CHECK
     if ((one_second_tick_counter % CONFIG_BKT_HEAP_INTEGRITY_CHECK_INTERVAL) == 0) {
@@ -185,7 +183,7 @@ extern "C"
 void
 vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
-#if 0
+#if 1
     if (pcTaskName) {
         for (int i=0; i < 70; i++) { putc('=', stdout); }
         puts("\nstack overflow in task: ");
