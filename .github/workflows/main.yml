@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    # Runs a single command using the runners shell
+    - name: List the repository content
+      run: ls -lR
+
+    - name: Print working directory
+      run: /bin/pwd
+
+    - name: Print environment
+      run: env | sort
+
+    - name: Run the build
+      run: docker run --rm -v $PWD:/project -w /project espressif/idf:v5.1.2 ./all-from-scratch
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: bkt1-${{ github.sha }}
+        path: ${{ github.workspace }}/build/bkt-1*
