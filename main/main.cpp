@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 //
 
+// ESP-IDF includes
 #include "esp_chip_info.h"
 #include "esp_event.h"
 #include "esp_flash.h"
@@ -9,7 +10,12 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 
+// general component includes
 #include "thread.hpp"
+
+// BKT component includes
+#include "CommandLine.h"
+
 using namespace cpp_freertos;
 
 static const char *TAG = "main";
@@ -51,7 +57,7 @@ print_chip_info()
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
 
-    ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), WiFi%s%s%s, ",
+    ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), WiFi%s%s%s",
              CONFIG_IDF_TARGET,
              chip_info.cores,
              (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
@@ -113,6 +119,9 @@ setup()
 
     ESP_ERROR_CHECK( esp_event_loop_create_default() );
 
+    // now start up the various application components
+    commandLine.begin();
+
     Thread::StartScheduler();
 
     ESP_LOGI(TAG, "setup complete");
@@ -165,7 +174,7 @@ extern "C"
 void
 app_main()
 {
-    ESP_LOGE(TAG, "start of app_main");
+    ESP_LOGI(TAG, "start of app_main");
 
     setup();
 

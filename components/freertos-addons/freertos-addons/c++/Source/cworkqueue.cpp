@@ -66,15 +66,16 @@ bool WorkItem::FreeAfterRun()
 WorkQueue::WorkQueue(   const char * const Name,
                         uint16_t StackDepth,
                         UBaseType_t Priority,
-                        UBaseType_t maxWorkItems)
+                        UBaseType_t maxWorkItems,
+                        const uint8_t coreID)
 {
     //
-    //  Build the Queue first, since the Thread is going to access 
+    //  Build the Queue first, since the Thread is going to access
     //  it as soon as it can, maybe before we leave this ctor.
     //
     WorkItemQueue = new Queue(maxWorkItems, sizeof(WorkItem *));
     ThreadComplete = new BinarySemaphore();
-    WorkerThread = new CWorkerThread(Name, StackDepth, Priority, this);
+    WorkerThread = new CWorkerThread(Name, StackDepth, Priority, coreID, this);
     //
     //  Our ctor chain is complete, we can start.
     //
@@ -84,15 +85,16 @@ WorkQueue::WorkQueue(   const char * const Name,
 
 WorkQueue::WorkQueue(   uint16_t StackDepth,
                         UBaseType_t Priority,
-                        UBaseType_t maxWorkItems)
+                        UBaseType_t maxWorkItems,
+                        const uint8_t coreID)
 {
     //
-    //  Build the Queue first, since the Thread is going to access 
+    //  Build the Queue first, since the Thread is going to access
     //  it as soon as it can, maybe before we leave this ctor.
     //
     WorkItemQueue = new Queue(maxWorkItems, sizeof(WorkItem *));
     ThreadComplete = new BinarySemaphore();
-    WorkerThread = new CWorkerThread(StackDepth, Priority, this);
+    WorkerThread = new CWorkerThread(StackDepth, Priority, coreID, this);
     //
     //  Our ctor chain is complete, we can start.
     //
@@ -105,14 +107,14 @@ WorkQueue::WorkQueue(   uint16_t StackDepth,
 WorkQueue::~WorkQueue()
 {
     //
-    //  This dtor is tricky, because of the multiple objects in 
+    //  This dtor is tricky, because of the multiple objects in
     //  play, and the multithreaded nature of this specific object.
     //
 
     //
-    //  Note that we cannot flush the queue. If there are items 
-    //  in the queue maked freeAfterComplete, we would leak the 
-    //  memory. 
+    //  Note that we cannot flush the queue. If there are items
+    //  in the queue maked freeAfterComplete, we would leak the
+    //  memory.
     //
 
     //
@@ -146,16 +148,18 @@ bool WorkQueue::QueueWork(WorkItem *work)
 WorkQueue::CWorkerThread::CWorkerThread(const char * const Name,
                                         uint16_t StackDepth,
                                         UBaseType_t Priority,
+                                        const uint8_t coreID,
                                         WorkQueue *Parent)
-    : Thread(Name, StackDepth, Priority), ParentWorkQueue(Parent)
+    : Thread(Name, StackDepth, coreID, Priority), ParentWorkQueue(Parent)
 {
 }
 
 
 WorkQueue::CWorkerThread::CWorkerThread(uint16_t StackDepth,
                                         UBaseType_t Priority,
+                                        const uint8_t coreID,
                                         WorkQueue *Parent)
-    : Thread(StackDepth, Priority), ParentWorkQueue(Parent)
+    : Thread(StackDepth, coreID, Priority), ParentWorkQueue(Parent)
 {
 }
 
@@ -193,7 +197,7 @@ void WorkQueue::CWorkerThread::Run()
         work->Run();
 
         //
-        //  If this was a dynamic, fire and forget item and we were 
+        //  If this was a dynamic, fire and forget item and we were
         //  requested to clean it up, do so.
         //
         if (work->FreeAfterRun()) {
@@ -206,5 +210,3 @@ void WorkQueue::CWorkerThread::Run()
     //
     ParentWorkQueue->ThreadComplete->Give();
 }
-
-

@@ -58,11 +58,13 @@ MutexStandard Thread::StartGuardLock;
 
 Thread::Thread( const std::string pcName,
                 uint16_t usStackDepth,
-                UBaseType_t uxPriority)
-    :   Name(pcName), 
-        StackDepth(usStackDepth), 
+                UBaseType_t uxPriority,
+                const uint8_t coreID)
+    :   Name(pcName),
+        StackDepth(usStackDepth),
         Priority(uxPriority),
-        ThreadStarted(false)
+        ThreadStarted(false),
+        CoreID(coreID)
 {
 #if (INCLUDE_vTaskDelayUntil == 1)
     delayUntilInitialized = false;
@@ -71,11 +73,13 @@ Thread::Thread( const std::string pcName,
 
 
 Thread::Thread( uint16_t usStackDepth,
-                UBaseType_t uxPriority)
-    :   Name("Default"), 
-        StackDepth(usStackDepth), 
+                UBaseType_t uxPriority,
+                const uint8_t coreID)
+    :   Name("Default"),
+        StackDepth(usStackDepth),
         Priority(uxPriority),
-        ThreadStarted(false)
+        ThreadStarted(false),
+        CoreID(coreID)
 {
 #if (INCLUDE_vTaskDelayUntil == 1)
     delayUntilInitialized = false;
@@ -89,10 +93,12 @@ Thread::Thread( uint16_t usStackDepth,
 
 Thread::Thread( const char *pcName,
                 uint16_t usStackDepth,
-                UBaseType_t uxPriority)
+                UBaseType_t uxPriority,
+                const uint8_t coreID)
     :   StackDepth(usStackDepth),
         Priority(uxPriority),
-        ThreadStarted(false)
+        ThreadStarted(false),
+        CoreID(coreID)
 {
     for (int i = 0; i < configMAX_TASK_NAME_LEN - 1; i++) {
         Name[i] = *pcName;
@@ -127,9 +133,9 @@ bool Thread::Start()
 {
     //
     //  If the Scheduler is on, we need to lock before checking
-    //  the ThreadStarted variable. We'll leverage the LockGuard 
-    //  pattern, so we can create the guard and just forget it. 
-    //  Leaving scope, including the return, will automatically 
+    //  the ThreadStarted variable. We'll leverage the LockGuard
+    //  pattern, so we can create the guard and just forget it.
+    //  Leaving scope, including the return, will automatically
     //  unlock it.
     //
     if (SchedulerActive) {
@@ -138,7 +144,7 @@ bool Thread::Start()
 
         if (ThreadStarted)
             return false;
-        else 
+        else
             ThreadStarted = true;
     }
     //
@@ -148,26 +154,28 @@ bool Thread::Start()
 
         if (ThreadStarted)
             return false;
-        else 
+        else
             ThreadStarted = true;
     }
 
 #ifndef CPP_FREERTOS_NO_CPP_STRINGS
 
-    BaseType_t rc = xTaskCreate(TaskFunctionAdapter,
-                                Name.c_str(),
-                                StackDepth,
-                                this,
-                                Priority,
-                                &handle);
-#else 
+    BaseType_t rc = xTaskCreatePinnedToCore(TaskFunctionAdapter,
+                                            Name.c_str(),
+                                            StackDepth,
+                                            this,
+                                            Priority,
+                                            &handle,
+                                            CoreID);
+#else
 
-    BaseType_t rc = xTaskCreate(TaskFunctionAdapter,
-                                Name,
-                                StackDepth,
-                                this,
-                                Priority,
-                                &handle);
+    BaseType_t rc = xTaskCreatePinnedToCore(TaskFunctionAdapter,
+                                            Name,
+                                            StackDepth,
+                                            this,
+                                            Priority,
+                                            &handle,
+                                            CoreID);
 #endif
 
     return rc != pdPASS ? false : true;
@@ -260,7 +268,7 @@ bool Thread::Wait(  ConditionVariable &Cv,
     //  will call Thread::Signal, which will release the semaphore.
     //
     bool timed_out = ThreadWaitSem.Take(Timeout);
-    
+
     //
     //  Grab the external lock again, as per cv semantics.
     //
@@ -271,5 +279,3 @@ bool Thread::Wait(  ConditionVariable &Cv,
 
 
 #endif
-
-
