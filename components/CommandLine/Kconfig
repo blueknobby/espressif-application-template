@@ -1,0 +1,9 @@
+menu "Blue Knobby Throttle Command Line Options"
+
+    config BKT_COMMAND_STACK_SIZE
+        int "Allocated stack size for command line task"
+        default 5120
+        help
+	    Allocated stack size for command line task
+
+endmenu

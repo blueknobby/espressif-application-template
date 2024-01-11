@@ -3,8 +3,11 @@
 #
 
 
-set(COMPONENT_SRCS
+set(APP_SRCS
     main.cpp
 )
 
-register_component()
+idf_component_register(
+    SRCS "${APP_SRCS}"
+    INCLUDE_DIRS "."
+)
