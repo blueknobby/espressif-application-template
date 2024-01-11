@@ -54,7 +54,7 @@ Once you have the IDF installed and set up in your current shell (via
 export.sh), building this code should be simple.
 
 ```sh
-$ cd blue-knobby-throttle
+$ cd bkt1-firmware
 $ ./all-from-scratch
 ```
 
@@ -125,4 +125,4 @@ code is ready.
 
 Email often works, but I am known to drown in it from time to time.
 
-Try me at `david zuhn <zoo@blueknobby.com>`.
+Try me at [david zuhn <zoo@blueknobby.com>](mailto:zoo@blueknobby.com)
