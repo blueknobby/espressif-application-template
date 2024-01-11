@@ -1,3 +1,7 @@
+//
+// SPDX-License-Identifier: GPL-2.0-only
+//
+
 #include <CommandLine.h>
 
 #include "esp_log.h"
@@ -46,11 +50,6 @@ CommandLineHandler::begin()
 
     esp_vfs_usb_serial_jtag_use_driver();
 #elif CONFIG_ESP_CONSOLE_UART
-    //const uart_port_t uart = CONFIG_ESP_CONSOLE_UART_NUM;
-
-
-
-
     /* Minicom, screen, idf_monitor send CR when ENTER key is pressed */
     esp_vfs_dev_uart_port_set_rx_line_endings(CONFIG_ESP_CONSOLE_UART_NUM, ESP_LINE_ENDINGS_CR);
     /* Move the caret to the beginning of the next line on '\n' */
@@ -74,7 +73,7 @@ CommandLineHandler::begin()
     };
     /* Install UART driver for interrupt-driven reads and writes */
     ESP_ERROR_CHECK( uart_driver_install(CONFIG_ESP_CONSOLE_UART_NUM,
-            256, 0, 0, NULL, 0) );
+                                         256, 0, 0, NULL, 0) );
     ESP_ERROR_CHECK( uart_param_config(CONFIG_ESP_CONSOLE_UART_NUM, &uart_config) );
 
     /* Tell VFS to use UART driver */
@@ -117,7 +116,6 @@ CommandLineHandler::begin()
 void
 CommandLineHandler::Run()
 {
-#if 1
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
      */
@@ -169,9 +167,6 @@ CommandLineHandler::Run()
         /* linenoise allocates line buffer on the heap, so need to free it */
         linenoiseFree(line);
     }
-#endif
-    while(true) {
-        vTaskDelay(1000);
-    }
+
     printf("End of command line loop\n");
 }
