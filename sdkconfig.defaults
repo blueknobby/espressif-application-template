@@ -3,13 +3,17 @@
 #
 #
 #
-# These values are important to the application
+# These values are important to the application or are generic to
+# ESP-IDF itself.
 #
 # Other settings will use the defaults as provided by the ESP IDF
 #
 #
 
 # Heap Debugging
+#CONFIG_BKT_RUN_HEAP_INTEGRITY_CHECK=y
+#CONFIG_BKT_PRINT_HEAP_INFO=y
+
 CONFIG_HEAP_TRACING=y
 CONFIG_HEAP_TRACING_STACK_DEPTH=2
 CONFIG_HEAP_TASK_TRACKING=y
