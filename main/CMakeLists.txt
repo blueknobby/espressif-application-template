@@ -5,6 +5,7 @@
 
 set(APP_SRCS
     main.cpp
+    cmds.cpp
 )
 
 idf_component_register(
