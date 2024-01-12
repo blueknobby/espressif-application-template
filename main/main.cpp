@@ -16,6 +16,8 @@
 // BKT component includes
 #include "CommandLine.h"
 
+#include "cmds.h"
+
 using namespace cpp_freertos;
 
 static const char *TAG = "main";
@@ -82,16 +84,6 @@ print_chip_info()
 }
 
 
-void
-show_heap_info(void)
-{
-    ESP_LOGI(TAG, "free bytes in heap: %8zu", xPortGetFreeHeapSize());
-    ESP_LOGI(TAG, "ESP heap size:      %8lu", esp_get_free_heap_size());
-    ESP_LOGI(TAG, "largest free block: %8zu", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT));
-    ESP_LOGI(TAG, "internal heap size: %8u", heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL));
-}
-
-
 void heap_caps_alloc_failed_hook(size_t requested_size, uint32_t caps, const char *function_name)
 {
     ESP_LOGE(TAG, "%s was called but failed to allocate %zu bytes with 0x%" PRIx32 " capabilities. \n",
@@ -121,6 +113,12 @@ setup()
 
     // now start up the various application components
     commandLine.begin();
+
+    register_heap_cmd();
+    register_task_cmd();
+    register_event_cmd();
+
+
 
     Thread::StartScheduler();
 
