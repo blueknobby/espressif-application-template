@@ -98,7 +98,6 @@ cmd_tasks(int argc, char **argv)
                        pxTaskStatusArray[x].ulRunTimeCounter,
                        percentage,
                        pxTaskStatusArray[x].usStackHighWaterMark);
-
             }
             printf("\n");
 

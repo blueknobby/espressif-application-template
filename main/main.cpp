@@ -127,25 +127,15 @@ setup()
 
 
 void
-loop()
+run_tick_events(uint64_t tick_counter)
 {
-    const int         ms_between_ticks = 50;
-    constexpr int     ticks_per_second = 1000 / ms_between_ticks;
-
-    static uint64_t   tick_counter = 1;
-    static uint64_t   one_second_tick_counter = 1;
-    static TickType_t lastWakeTime = xTaskGetTickCount();
-
-    vTaskDelayUntil(&lastWakeTime, pdMS_TO_TICKS(ms_between_ticks));
-    tick_counter += 1;
-
     // send tick_counter to the main controller
+}
 
-    if ((tick_counter % ticks_per_second) == 0) {
-        one_second_tick_counter += 1;
-
-        // send one_second_tick_counter to the main controller
-    }
+void
+run_one_second_tick_events(uint64_t one_second_tick_counter)
+{
+    // send one_second_tick_counter to the main controller
 
 #if CONFIG_BKT_RUN_HEAP_INTEGRITY_CHECK
     if ((one_second_tick_counter % CONFIG_BKT_HEAP_INTEGRITY_CHECK_INTERVAL) == 0) {
@@ -164,6 +154,30 @@ loop()
         show_heap_info();
     }
 #endif
+}
+
+
+void
+loop()
+{
+    const int         ms_between_ticks = 50;
+    constexpr int     ticks_per_second = 1000 / ms_between_ticks;
+
+    static uint64_t   tick_counter = 1;
+    static uint64_t   one_second_tick_counter = 1;
+    static TickType_t lastWakeTime = xTaskGetTickCount();
+
+    vTaskDelayUntil(&lastWakeTime, pdMS_TO_TICKS(ms_between_ticks));
+    tick_counter += 1;
+
+    run_tick_events(tick_counter);
+
+    if ((tick_counter % ticks_per_second) == 0) {
+        one_second_tick_counter += 1;
+
+        run_one_second_tick_events(one_second_tick_counter);
+    }
+
 
 }
 
