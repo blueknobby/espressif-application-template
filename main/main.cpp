@@ -15,6 +15,7 @@
 
 // application component includes
 #include "CommandLine.h"
+#include "PilotLight.h"
 
 #include "cmds.h"
 
@@ -113,6 +114,10 @@ setup()
 
     // now start up the various application components
     commandLine.begin();
+
+#if CONFIG_HW_HAVE_PILOT_LIGHT
+    pilotLight.begin();
+#endif
 
     register_heap_cmd();
     register_task_cmd();
@@ -215,12 +220,12 @@ vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
 #if 1
     if (pcTaskName) {
-        for (int i=0; i < 70; i++) { putc('=', stdout); }
+        //for (int i=0; i < 70; i++) { putc('=', stdout); }
         puts("\nstack overflow in task: ");
         puts((const char *) pcTaskName);
         putc('\n', stdout);
-        for (int i=0; i < 70; i++) { putc('=', stdout); }
-        putc('\n', stdout);
+        //for (int i=0; i < 70; i++) { putc('=', stdout); }
+        //putc('\n', stdout);
     }
 #endif
 

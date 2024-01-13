@@ -1,0 +1,31 @@
+menu "Pilot Light HW Configuration"
+
+    config HW_PILOT_LIGHT_GPIO
+        int "Pilot Light GPIO pin"
+        default 21 if BKT_0
+    default 42 if BKT_1
+        range 0 48
+        help
+            GPIO pin assigned as pilot light
+
+    config BKT_PILOT_LIGHT_STACK_SIZE
+        int "Allocated stack size for pilotLight task"
+        default 3072
+        help
+            Allocated stack size for pilotLight task
+
+
+    config BKT_PILOT_LIGHT_IS_NEOPIXEL
+        bool "Use onboard NeoPixel for pilot light"
+    default n if BKT_0
+    default y if BKT_1
+    help
+        Enables use of the NeoPixel (controlled at the gpio pin HW_PILOT_LIGHT_GPIO)
+
+    config BKT_PILOT_LIGHT_COMMAND
+        bool "Enable the 'pilot' command to set pilot light timings"
+    default y
+    help
+        Enable the console 'pilot' command to set on/off times
+
+endmenu

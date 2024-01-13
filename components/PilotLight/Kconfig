@@ -1,0 +1,55 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
+
+menu "Hardware Pilot Light HW Configuration"
+
+    config HW_HAVE_PILOT_LIGHT
+    	bool "Blink a pilot light (LED/Neopixel)"
+	default n
+	help
+	    Configure a task that blinks a pilot light LED
+
+    config HW_PILOT_LIGHT_GPIO
+        int "Pilot Light GPIO pin"
+	depends on HW_HAVE_PILOT_LIGHT
+        range 0 48 if HW_HAVE_PILOT_LIGHT
+	default 8
+        help
+            GPIO pin assigned as pilot light
+
+    config HW_PILOT_LIGHT_IS_NEOPIXEL
+        bool "Use onboard NeoPixel for pilot light"
+	depends on HW_HAVE_PILOT_LIGHT
+	default n
+	help
+	    Enables use of the NeoPixel (controlled at the gpio pin HW_PILOT_LIGHT_GPIO)
+
+    config APP_PILOT_LIGHT_STACK_SIZE
+        int "Allocated stack size for pilotLight task"
+	depends on HW_HAVE_PILOT_LIGHT
+        default 3300
+        help
+            Allocated stack size for pilotLight task
+
+
+    config APP_PILOT_LIGHT_COMMAND
+        bool "Enable the 'pilot' command to set pilot light timings"
+	depends on HW_HAVE_PILOT_LIGHT
+	default y
+	help
+	    Enable the console 'pilot' command to set on/off times
+
+    config APP_PILOT_LIGHT_ON_TIME
+        int "Pilot Light ON time (in ms)"
+	depends on HW_HAVE_PILOT_LIGHT
+	default 250
+
+    config APP_PILOT_LIGHT_OFF_TIME
+        int "Pilot Light OFF time (in ms)"
+	depends on HW_HAVE_PILOT_LIGHT
+	default 750
+
+
+endmenu
