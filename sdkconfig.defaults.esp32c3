@@ -1,5 +1,5 @@
 #
-# SPDX-License-Identifier: GPL-2.0-only
+# SPDX-License-Identifier: MIT
 #
 #
 # These values are important to the application when running on the ESP32-C3 based boards
@@ -13,6 +13,12 @@ CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
 
 CONFIG_PARTITION_TABLE_CUSTOM=y
 CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions/4MB.csv"
+
+# set up for the ESP32-C3-DevKitC
+CONFIG_HW_HAVE_PILOT_LIGHT=y
+CONFIG_HW_PILOT_LIGHT_GPIO=8
+CONFIG_HW_PILOT_LIGHT_IS_NEOPIXEL=y
+CONFIG_APP_PILOT_LIGHT_STACK_SIZE=3300
 
 #
 # on ESP32C3 we default to using the USB Serial/JTAG interface
