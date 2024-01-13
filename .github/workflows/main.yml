@@ -19,24 +19,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: checkout repo
     - uses: actions/checkout@v2
       with:
         submodules: recursive
 
-    # Runs a single command using the runners shell
-    - name: List the repository content
-      run: ls -lR
-
-    - name: Print working directory
-      run: /bin/pwd
-
-    - name: Print environment
-      run: env | sort
-
-    - name: Run the build
-      run: docker run --rm -v $PWD:/project -w /project espressif/idf:v5.1.2 ./all-from-scratch
-
-    - uses: actions/upload-artifact@v2
+    - name: esp-idf build
+      uses: espressif/esp-idf-ci-action@v1
       with:
-        name: bkt1-${{ github.sha }}
-        path: ${{ github.workspace }}/build/bkt-1*
+        esp_idf_version: v5.1.2
+        target: esp32s3
+        path: bkt1-firmware
