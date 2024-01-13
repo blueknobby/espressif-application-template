@@ -1,30 +1,30 @@
-menu "BKT Debug Options"
+menu "Application Heap Debug Options"
 
-    config BKT_RUN_HEAP_INTEGRITY_CHECK
+    config APP_RUN_HEAP_INTEGRITY_CHECK
         bool "Run heap integrity check in the main loop"
         default n
         help
             Run the heap integrity check in the main loop
 
-    config BKT_HEAP_INTEGRITY_CHECK_INTERVAL
+    config APP_HEAP_INTEGRITY_CHECK_INTERVAL
         int "Run the heap integrity check every this many seconds"
-	depends on BKT_RUN_HEAP_INTEGRITY_CHECK
+	depends on APP_RUN_HEAP_INTEGRITY_CHECK
 	default 5
 	help
-	    If BKT_RUN_HEAP_INTEGRITY_CHECK=y, delay this many seconds between invocations
+	    If APP_RUN_HEAP_INTEGRITY_CHECK=y, delay this many seconds between invocations
 
-    config BKT_PRINT_HEAP_INFO
+    config APP_PRINT_HEAP_INFO
         bool "Show heap info in the main loop"
         default n
         help
             Print heap info in the main loop
 
-    config BKT_PRINT_HEAP_INFO_INTERVAL
+    config APP_PRINT_HEAP_INFO_INTERVAL
         int "Display the heap info every this many seconds"
-	depends on BKT_PRINT_HEAP_INFO
+	depends on APP_PRINT_HEAP_INFO
 	default 60
 	help
-	    If BKT_PRINT_HEAP_INFO=y, delay this many seconds between heap print
+	    If APP_PRINT_HEAP_INFO=y, delay this many seconds between heap print
 
 
 endmenu

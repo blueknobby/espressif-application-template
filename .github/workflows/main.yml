@@ -19,7 +19,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - name: checkout application source
+      uses: actions/checkout@v2
       with:
         submodules: recursive
 
@@ -35,8 +36,3 @@ jobs:
 
     - name: Run the build
       run: docker run --rm -v $PWD:/project -w /project espressif/idf:v5.1.2 ./all-from-scratch
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: bkt1-${{ github.sha }}
-        path: ${{ github.workspace }}/build/bkt-1*

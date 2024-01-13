@@ -1,4 +1,5 @@
 build
+built-*
 cmake-build-debug
 
 sdkconfig
