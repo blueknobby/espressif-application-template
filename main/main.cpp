@@ -13,7 +13,7 @@
 // general component includes
 #include "thread.hpp"
 
-// BKT component includes
+// application component includes
 #include "CommandLine.h"
 
 #include "cmds.h"
@@ -137,8 +137,8 @@ run_one_second_tick_events(uint64_t one_second_tick_counter)
 {
     // send one_second_tick_counter to the main controller
 
-#if CONFIG_BKT_RUN_HEAP_INTEGRITY_CHECK
-    if ((one_second_tick_counter % CONFIG_BKT_HEAP_INTEGRITY_CHECK_INTERVAL) == 0) {
+#if CONFIG_APP_RUN_HEAP_INTEGRITY_CHECK
+    if ((one_second_tick_counter % CONFIG_APP_HEAP_INTEGRITY_CHECK_INTERVAL) == 0) {
         ESP_LOGI(TAG, "checking heap integrity");
         if (!heap_caps_check_integrity_all(true)) {
             ESP_LOGE(TAG, "***** heap integrity failure");
@@ -147,8 +147,8 @@ run_one_second_tick_events(uint64_t one_second_tick_counter)
     }
 #endif
 
-#if CONFIG_BKT_PRINT_HEAP_INFO
-    if ((one_second_tick_counter % CONFIG_BKT_PRINT_HEAP_INFO_INTERVAL) == 0) {
+#if CONFIG_APP_PRINT_HEAP_INFO
+    if ((one_second_tick_counter % CONFIG_APP_PRINT_HEAP_INFO_INTERVAL) == 0) {
         ESP_LOGI(TAG, "heap info");
         heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
         show_heap_info();

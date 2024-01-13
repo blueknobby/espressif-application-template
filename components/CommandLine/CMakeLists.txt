@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 set(INCLUDEDIRS include)
 set(SRCS
     CommandLine.cpp

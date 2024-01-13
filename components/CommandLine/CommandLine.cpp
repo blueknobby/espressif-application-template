@@ -18,14 +18,17 @@
 #include "argtable3/argtable3.h"
 #include "esp_console.h"
 
-#include "bkt_priority.h"
+#include "app_priority.h"
 
 
-CommandLineHandler commandLine("cmdline", /* priority= */ PRI_CMDLINE );
+static const char *TAG = "cmd";
+
+
+CommandLineHandler commandLine(TAG, /* priority= */ PRI_CMDLINE );
 
 
 CommandLineHandler::CommandLineHandler(std::string name, UBaseType_t priority)
-    : Thread(name, CONFIG_BKT_COMMAND_STACK_SIZE, priority, /*CPU*/ 1)
+    : Thread(name, CONFIG_APP_COMMAND_STACK_SIZE, priority, /*CPU*/ 1)
 {
 }
 
@@ -116,14 +119,12 @@ CommandLineHandler::begin()
 void
 CommandLineHandler::Run()
 {
+    const size_t MAX_PROMPT_SIZE = 20;
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
      */
-    char* prompt = static_cast<char*>(calloc(40,1));
+    char* prompt = static_cast<char*>(calloc(MAX_PROMPT_SIZE,1));
 
-    std::string name = "bkt1";     // hw.getNetworkName();
-
-    snprintf(prompt, 40, "%s%s%s>", LOG_COLOR_I, name.c_str(), LOG_RESET_COLOR);
 
     printf("\n"
            "Type 'help' to get the list of commands.\n"
@@ -142,6 +143,10 @@ CommandLineHandler::Run()
 
     /* Main loop */
     while(true) {
+        // do something dynamic here to retrieve the prompt string info
+        std::string name = "";
+        snprintf(prompt, MAX_PROMPT_SIZE, "%s%s%s>", LOG_COLOR_I, name.c_str(), LOG_RESET_COLOR);
+
         /* Get a line using linenoise.
          * The line is returned when ENTER is pressed.
          */
@@ -149,6 +154,7 @@ CommandLineHandler::Run()
         if (line == NULL) { /* Ignore empty lines */
             continue;
         }
+
         /* Add the command to the history */
         linenoiseHistoryAdd(line);
 
@@ -168,5 +174,6 @@ CommandLineHandler::Run()
         linenoiseFree(line);
     }
 
-    printf("End of command line loop\n");
+    // THE LOOP SHOULD NEVER EXIT!
+    ESP_LOGE(TAG, "End of command line loop\n");
 }
