@@ -14,18 +14,39 @@ fi
 
 if [ $# -eq 0 ]
 then
-    ARCH=(esp32s3)
+    if [ -n "$ESP32_TARGETS" ]
+    then
+	TARGET=( "$ESP32_TARGETS" )
+    else
+	TARGET=$(idf.py --list-targets)
+    fi
 else
-    ARCH=( "$@" )
+    TARGET=( "$@" )
 fi
 
+rm -rf built-*
 
-for arch in ${ARCH[@]}
+for target in ${TARGET[@]}
 do
-  set -ex
-  echo "Building for ${arch}...."
-  rm -rf build sdkconfig
-  idf.py set-target $arch
-  idf.py fullclean
-  idf.py build | xtensa-${arch}-elf-c++filt
+    case $target in
+	esp32|esp32s*)
+	               arch=xtensa
+		       subarch=$target
+		       ;;
+	esp32c*|esp32h*)
+	               arch=riscv32
+		       subarch=esp
+		       ;;
+    esac
+
+    mkdir built-${target}
+    IDF="idf.py -B built-${target}"
+
+    set -ex
+    echo "Building for ${arch}...."
+    rm -rf sdkconfig
+    $IDF set-target $target
+    $IDF fullclean
+    $IDF build 2>&1 | ${arch}-${subarch}-elf-c++filt
+    set +ex
 done
