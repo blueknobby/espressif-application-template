@@ -15,6 +15,7 @@
 
 // application component includes
 #include "CommandLine.h"
+#include "Logger.h"
 #include "PilotLight.h"
 
 #include "cmds.h"
@@ -113,6 +114,7 @@ setup()
     ESP_ERROR_CHECK( esp_event_loop_create_default() );
 
     // now start up the various application components
+    logger.begin();
     commandLine.begin();
 
 #if CONFIG_HW_HAVE_PILOT_LIGHT
@@ -122,8 +124,6 @@ setup()
     register_heap_cmd();
     register_task_cmd();
     register_event_cmd();
-
-
 
     Thread::StartScheduler();
 

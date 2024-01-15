@@ -1,0 +1,9 @@
+menu "Application Logger Details"
+
+    config APP_LOGGER_STACK_SIZE
+        int "Allocated stack size for Logger task"
+        default 4096
+        help
+            Allocated stack size for Logger task
+
+endmenu

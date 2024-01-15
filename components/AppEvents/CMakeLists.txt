@@ -3,18 +3,15 @@
 #
 
 set(SRCS
-    PilotLight.cpp
-   )
+    AppEvents.cpp
+)
 
 set(INCLUDEDIRS include)
 
 set(REQUIRES
-    priorities
-    console
-    freertos-addons
-    driver
-    led_strip
+    esp_event
 )
+
 
 idf_component_register(
     SRCS         "${SRCS}"

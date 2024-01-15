@@ -6,5 +6,6 @@ typedef enum
 {
     PRI_IDLE = 5,
     PRI_CMDLINE,
-    PRI_PILOT_LIGHT
+    PRI_PILOT_LIGHT,
+    PRI_LOGGER
 } bkt_priority;
