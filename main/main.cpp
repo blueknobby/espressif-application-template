@@ -14,6 +14,7 @@
 #include "thread.hpp"
 
 // application component includes
+#include "Bluetooth.h"
 #include "CommandLine.h"
 #include "Logger.h"
 #include "PilotLight.h"
@@ -61,11 +62,12 @@ print_chip_info()
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
 
-    ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), WiFi%s%s%s",
+    ESP_LOGI(TAG, "This is %s chip with %d CPU core(s), %s%s%s%s",
              CONFIG_IDF_TARGET,
              chip_info.cores,
-             (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
-             (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "",
+             (chip_info.features & CHIP_FEATURE_WIFI_BGN)   ? "WiFi (2.4 GHz)" : "",
+             (chip_info.features & CHIP_FEATURE_BT)         ? "/BT" : "",
+             (chip_info.features & CHIP_FEATURE_BLE)        ? "/BLE" : "",
              (chip_info.features & CHIP_FEATURE_IEEE802154) ? "/802.15.4 (Zigbee/Thread)" : "");
 
     ESP_LOGI(TAG, "silicon revision %" PRIi16 , chip_info.revision);
@@ -116,6 +118,7 @@ setup()
     // now start up the various application components
     logger.begin();
     commandLine.begin();
+    ble.begin();
 
 #if CONFIG_HW_HAVE_PILOT_LIGHT
     pilotLight.begin();
