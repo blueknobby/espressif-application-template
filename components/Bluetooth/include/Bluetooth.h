@@ -1,3 +1,7 @@
+//
+// SPDX-License-Identifier: GPL-2.0-only
+//
+
 #pragma once
 
 #include <cstdint>
@@ -26,8 +30,6 @@ class BLE
 
     // battery level
     void setBatteryLevel(const uint8_t percentage);  // range from 0..100
-
-
 };
 
 extern BLE ble;

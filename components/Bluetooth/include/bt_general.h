@@ -77,7 +77,6 @@ enum
 
 /* Attributes State Machine */
 
-
 enum
 {
     IDX_APP_SVC,
@@ -85,11 +84,6 @@ enum
     IDX_APP_CHAR_SPP,
     IDX_APP_CHAR_VAL_SPP,
     IDX_APP_CHAR_CFG_SPP,
-
-#if 0
-    IDX_APP_CHAR_WRITE,
-    IDX_APP_CHAR_VAL_WRITE,
-#endif
 
     APP_IDX_NB
 };

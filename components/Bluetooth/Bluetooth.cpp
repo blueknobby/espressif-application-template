@@ -1,3 +1,7 @@
+//
+// SPDX-License-Identifier: GPL-2.0-only
+//
+
 #include "Bluetooth.h"
 
 #include <cstring>
@@ -13,7 +17,6 @@
 #include "esp_gatt_common_api.h"
 
 #include "bt_general.h"
-#include "bt_app_ids.h"
 
 #include "bt_svc_app.h"
 #include "bt_svc_dis.h"
